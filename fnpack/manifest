@@ -1,0 +1,25 @@
+appname                    = techfunway-contract
+version                    = 0.2.0
+display_name               = 合同管家
+desc                       = 面向个人与小微团队的合同管理应用：富文本合同模板 + 自定义字段，按模板填写生成合同，占位符自动代入、留空渲染手写空位，合同快照独立保存不受模板改动影响，A4 打印视图一键打印或另存 PDF，支持飞牛 NAS 账号登录。
+source                     = thirdparty
+platform                   = x86
+maintainer                 = 科技智趣坊
+maintainer_url             = https://github.com/TechFunWay/contract
+distributor                = 科技智趣坊
+distributor_url            = http://techfunway.wycto.cn
+os_min_version             = 1.0.0
+ctl_stop                   = true
+desktop_uidir              = ui
+desktop_applaunchname      = techfunway-contract.main
+service_port               = 8911
+checkport                  = false
+disable_authorization_path = false
+changelog                  = """
+v0.2.0 更新：
+- 应用中心点开改为浏览器新标签页打开；只有「使用飞牛 NAS 登录」授权时才弹窗口
+- 飞牛登录重做：打开应用自动带上飞牛登录态，刷新不掉线；手机端授权链路补齐，修飞牛手机 App 打不开
+- 备份支持从本地上传备份文件恢复（换机迁移）
+- 手机端布局紧凑化、管理表格改卡片列表，修复横向溢出
+- 图标重绘为 3D 玻璃立体风格；安装包修正启动命令与产物命名
+"""

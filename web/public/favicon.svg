@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <!-- ===== 底板：青瓷/翡翠玻璃 ===== -->
+    <linearGradient id="tile" x1="0" y1="0" x2="0.25" y2="1">
+      <stop offset="0" stop-color="#5EEAD4"/>
+      <stop offset="0.38" stop-color="#14B8A6"/>
+      <stop offset="0.78" stop-color="#0A8F6A"/>
+      <stop offset="1" stop-color="#075E4B"/>
+    </linearGradient>
+    <radialGradient id="tileGlow" cx="0.22" cy="0.12" r="0.85">
+      <stop offset="0" stop-color="#D9FFF4" stop-opacity="0.75"/>
+      <stop offset="0.4" stop-color="#7DF0D8" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#2DD4BF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tileShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0.55" stop-color="#022C22" stop-opacity="0"/>
+      <stop offset="1" stop-color="#022C22" stop-opacity="0.38"/>
+    </linearGradient>
+    <linearGradient id="tileSheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.5"/>
+      <stop offset="0.45" stop-color="#FFFFFF" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- ===== 合同纸：玻璃纸面 ===== -->
+    <linearGradient id="card" x1="0.1" y1="0" x2="0.75" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.99"/>
+      <stop offset="0.6" stop-color="#F2F5FA" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#DFE6F0" stop-opacity="0.94"/>
+    </linearGradient>
+    <linearGradient id="header" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2DD4BF"/>
+      <stop offset="0.5" stop-color="#14B8A6"/>
+      <stop offset="1" stop-color="#0D9488"/>
+    </linearGradient>
+    <linearGradient id="headerSheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="streak" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- ===== 红章：3D 玻璃釉面 ===== -->
+    <linearGradient id="sealFace" x1="0.1" y1="0" x2="0.75" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.99"/>
+      <stop offset="0.6" stop-color="#F5F7FB" stop-opacity="0.97"/>
+      <stop offset="1" stop-color="#E3E9F2" stop-opacity="0.95"/>
+    </linearGradient>
+    <linearGradient id="sealSide" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B91C1C"/>
+      <stop offset="1" stop-color="#7F1D1D"/>
+    </linearGradient>
+    <radialGradient id="sealSpec" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="0.6" stop-color="#FFFFFF" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="ao" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="20"/>
+    </filter>
+    <filter id="softAo" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10"/>
+    </filter>
+  </defs>
+
+  <!-- ============================================================ -->
+  <!-- 玻璃底板 -->
+  <!-- ============================================================ -->
+  <rect x="28" y="28" width="968" height="968" rx="218" fill="url(#tile)"/>
+  <rect x="28" y="28" width="968" height="968" rx="218" fill="url(#tileGlow)"/>
+  <rect x="28" y="28" width="968" height="968" rx="218" fill="url(#tileShade)"/>
+  <!-- 顶部整体光泽（玻璃反光带） -->
+  <path d="M246 28 h532 a218 218 0 0 1 218 218 v96 c-306 96 -662 96 -968 0 v-96 a218 218 0 0 1 218 -218 z"
+        fill="url(#tileSheen)"/>
+  <!-- 内亮边 + 外暗边（玻璃厚度） -->
+  <rect x="40" y="40" width="944" height="944" rx="208" fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="7"/>
+  <rect x="33" y="33" width="958" height="958" rx="213" fill="none" stroke="#064E3B" stroke-opacity="0.35" stroke-width="5"/>
+
+  <!-- ============================================================ -->
+  <!-- 合同纸（3D 悬浮 + 纸页堆叠） -->
+  <!-- ============================================================ -->
+  <!-- 落影 -->
+  <ellipse cx="478" cy="846" rx="286" ry="42" fill="#03251C" opacity="0.42" filter="url(#ao)"/>
+  <!-- 纸页堆叠（厚度） -->
+  <rect x="282" y="768" width="420" height="58" rx="34" fill="#96A2B2"/>
+  <rect x="266" y="748" width="450" height="64" rx="38" fill="#B2BDCB"/>
+  <rect x="250" y="728" width="480" height="70" rx="42" fill="#CCD5E0"/>
+  <!-- 纸体 -->
+  <g>
+    <rect x="234" y="196" width="512" height="580" rx="50" fill="url(#card)"/>
+    <!-- 标题条 -->
+    <rect x="306" y="268" width="368" height="54" rx="18" fill="url(#header)"/>
+    <rect x="306" y="268" width="368" height="26" rx="13" fill="url(#headerSheen)"/>
+    <!-- 正文行 -->
+    <rect x="306" y="376" width="340" height="24" rx="12" fill="#CBD5E1"/>
+    <rect x="306" y="440" width="272" height="24" rx="12" fill="#CBD5E1"/>
+    <rect x="306" y="504" width="340" height="24" rx="12" fill="#CBD5E1"/>
+    <rect x="306" y="568" width="272" height="24" rx="12" fill="#CBD5E1"/>
+    <rect x="306" y="632" width="340" height="24" rx="12" fill="#CBD5E1"/>
+    <!-- 签名线 -->
+    <line x1="306" y1="712" x2="540" y2="712" stroke="#94A3B8" stroke-width="8" stroke-linecap="round"/>
+    <line x1="592" y1="712" x2="680" y2="712" stroke="#94A3B8" stroke-width="8" stroke-linecap="round"/>
+    <!-- 纸面斜向玻璃高光 -->
+    <path d="M540 196 h106 a50 50 0 0 1 50 50 v100 c-110 -36 -160 -82 -206 -150 z" fill="url(#streak)" opacity="0.5"/>
+    <path d="M234 300 c130 30 322 30 452 0 v22 c-130 30 -322 30 -452 0 z" fill="#FFFFFF" opacity="0.35"/>
+    <!-- 纸顶边受光亮线 -->
+    <line x1="286" y1="203" x2="694" y2="203" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="6" stroke-linecap="round" filter="url(#softAo)"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- 红章（3D 釉面主体） -->
+  <!-- ============================================================ -->
+  <ellipse cx="726" cy="900" rx="178" ry="30" fill="#03251C" opacity="0.5" filter="url(#ao)"/>
+  <g>
+    <!-- 侧壁（厚度） -->
+    <circle cx="726" cy="746" r="148" fill="url(#sealSide)"/>
+    <!-- 顶面 -->
+    <circle cx="726" cy="720" r="148" fill="url(#sealFace)"/>
+    <circle cx="726" cy="720" r="116" fill="none" stroke="#DC2626" stroke-width="17"/>
+    <circle cx="726" cy="720" r="88" fill="none" stroke="#DC2626" stroke-width="5"/>
+    <path d="M726 673.8 L740.3 706.9 L776.3 710.3 L749.2 734.4 L757.5 769.8 L726 751.3 L694.5 769.8 L702.8 734.4 L675.7 710.3 L711.7 706.9 Z" fill="#DC2626"/>
+    <!-- 顶面左侧大高光（釉面） -->
+    <ellipse cx="660" cy="642" rx="62" ry="88" fill="url(#sealSpec)" transform="rotate(-18 660 642)"/>
+    <!-- 小镜面光斑 -->
+    <ellipse cx="686" cy="608" rx="24" ry="38" fill="#FFFFFF" opacity="0.8" filter="url(#softAo)" transform="rotate(-20 686 608)"/>
+    <!-- 右侧环境反光 -->
+    <path d="M846 630 C 862 668 870 712 872 752 L 846 752 C 842 710 834 668 824 634 Z" fill="#FFFFFF" opacity="0.4"/>
+    <!-- 底缘前缘高光 -->
+    <path d="M596 822 A148 148 0 0 0 856 810" fill="none" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="10" stroke-linecap="round" filter="url(#softAo)"/>
+  </g>
+</svg>

@@ -1,0 +1,91 @@
+/* Theme tokens for 合同管家（contract）— inherited from the smallgo base
+ * framework's token system, retuned to the app's own identity: a teal→emerald
+ * "合同纸" brand, warm seal-gold accent, and an extended `seal` semantic
+ * color (印章红) for signed/required marks.
+ *
+ * Original framework notes:
+ * Each value is an "R G B" triplet (space-separated, no commas) so that
+ * Tailwind's `<alpha-value>` placeholder can compose it into
+ * `rgb(var(--x) / <alpha-value>)` at build time, which is the only way the
+ * opacity utilities (`/20`, `/70`, ...) work on tokenized colors.
+ *
+ * Themes live in two dimensions:
+ *
+ *   mode  — 'light' or 'dark'. The `.dark` class on <html> flips every
+ *           token to its dark variant.
+ *   brand — optional class on <html> like `.brand-acme` that overrides the
+ *           --color-brand-* range without touching the surrounding surface
+ *           tokens. Adding a new white-label palette means appending a CSS
+ *           rule for `.brand-<id>` here.
+ *
+ * The inline FOUC-prevention script in index.html sets both classes BEFORE
+ * Vue mounts so the first paint already reflects the user's choice.
+ */
+
+:root {
+  /* Brand — 青瓷/翡翠 teal→emerald，呼应应用图标（青翠底板 + 白纸 + 红章）。
+   * 600 是主操作色；500→300 的品牌渐变（bg-brand-gradient）由青过渡到薄荷翠。 */
+  --color-brand-50:  236 253 245;
+  --color-brand-100: 209 250 229;
+  --color-brand-200: 167 243 208;
+  --color-brand-300: 110 231 183;
+  --color-brand-400: 45 212 191;
+  --color-brand-500: 20 184 166;
+  --color-brand-600: 13 148 136;
+  --color-brand-700: 15 118 110;
+  --color-brand-800: 17 94 89;
+  --color-brand-900: 19 78 74;
+
+  /* Surfaces and content — 轻微青调的"纸面"灰，替代框架默认的蓝调灰 */
+  --color-background:          247 250 249;
+  --color-foreground:          15 23 26;
+  --color-surface:             255 255 255;
+  --color-surface-foreground:  15 23 26;
+  --color-muted:               240 245 243;
+  --color-muted-foreground:   100 116 110;
+  --color-border:              224 233 230;
+  --color-input:               224 233 230;
+  --color-ring:                var(--color-brand-500);
+  --color-accent:              217 119 6;
+  --color-destructive:         220 38 38;
+
+  /* seal — 印章红（本应用延伸的语义色）：生效状态、必填标记等"落章"意象 */
+  --color-seal:                185 28 28;
+}
+
+.dark {
+  --color-background:           8 15 17;
+  --color-foreground:          234 243 240;
+  --color-surface:             15 25 27;
+  --color-surface-foreground:  234 243 240;
+  --color-muted:               30 42 44;
+  --color-muted-foreground:    148 170 164;
+  --color-border:              47 62 64;   /* teal-tinted — opaque white looked like a 3D bevel */
+  --color-input:               47 62 64;
+  --color-accent:              251 191 36;
+  --color-destructive:         248 113 113;
+  --color-seal:                248 113 113;
+}
+
+/* White-label brand overrides.
+ *
+ * Drop a brand by adding `.brand-<id>` here and shipping the resulting CSS.
+ * The Pinia theme store toggles `<html>`'s `brand-<id>` class so the entire
+ * app reskins without touching component markup.
+ *
+ * Example skeleton (commented out) — keep around as a template:
+
+.brand-acme {
+  --color-brand-50:  255 247 237;
+  --color-brand-100: 255 237 213;
+  --color-brand-200: 254 215 170;
+  --color-brand-300: 253 186 116;
+  --color-brand-400: 251 146 60;
+  --color-brand-500: 249 115 22;
+  --color-brand-600: 234 88 12;
+  --color-brand-700: 194 65 12;
+  --color-brand-800: 154 52 18;
+  --color-brand-900: 124 45 18;
+}
+
+ */
