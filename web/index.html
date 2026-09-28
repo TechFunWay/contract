@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>合同管家</title>
+    <script>
+      // 服务端把 __FNOS_GATEWAY_FLAG__ 替换成「这次文档请求是不是从飞牛网关
+      // socket 进来的」（见 server/server/server.go）。网关域上前端不能带应用
+      // 自己的 Authorization（接入层会拒），登录态由服务端用网关注入的
+      // X-Trim-* 身份解析，见 web/src/utils/gateway.ts。
+      window.__FNOS_GATEWAY__ = "__FNOS_GATEWAY_FLAG__" === "true";
+    </script>
+    <script>
+      // Apply the saved theme BEFORE any CSS or Vue mounts so the first paint
+      // already reflects the user's choice — otherwise a system-default
+      // light flash cuts in before Pinia's theme store runs apply().
+      (function () {
+        try {
+          var mode = localStorage.getItem('contract-theme-mode') || 'system';
+          var brand = localStorage.getItem('contract-theme-brand') || 'default';
+          var dark = mode === 'dark' ||
+            (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var root = document.documentElement;
+          root.classList.toggle('dark', dark);
+          if (brand !== 'default') root.classList.add('brand-' + brand);
+        } catch (e) { /* private mode or storage off — fall back to defaults */ }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "appname": "techfunway-contract",
+  "display_name": "合同管家",
+  "version": "0.2.0",
+  "desc": "合同管家 — 自定义模板生成合同，支持导出打印 PDF",
+  "author": "TechFunWay",
+  "website": "https://techfunway.wycto.cn",
+  "port": 8911,
+  "docker": {
+    "image": "techfunways/contract",
+    "container": "techfunway-contract",
+    "tag_prefix": "techfunway-contract"
+  },
+  "fnos": {
+    "os_min_version": "1.0.0",
+    "service_port": 8911,
+    "ctl_stop": true,
+    "checkport": false,
+    "disable_authorization_path": false
+  }
+}
