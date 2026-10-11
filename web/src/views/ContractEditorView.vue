@@ -17,6 +17,7 @@ import {
   type TemplateSummary,
 } from '../api/contract'
 import { amountToCnyUppercase } from '../utils/cny-money'
+import { appHref } from '../utils/app-url'
 
 const route = useRoute()
 const router = useRouter()
@@ -216,7 +217,9 @@ watch(values, () => {
 
 function print() {
   if (contract.value) {
-    window.open(`/print/contract/${contract.value.id}`, '_blank')
+    // 打印页开新窗口必须带网关前缀（appHref），根绝对路径会逃出
+    // /app/techfunway-contract 落到网关根上，被兜底转去飞牛相册。
+    window.open(appHref(`/print/contract/${contract.value.id}`), '_blank')
   }
 }
 

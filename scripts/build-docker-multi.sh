@@ -4,7 +4,7 @@ set -euo pipefail
 # 多平台（linux/amd64 + linux/arm64）合并 manifest 的镜像，两种产物：
 #   默认        —— 本地 OCI 归档 release/<VERSION>/techfunway-contract-<VERSION>-multiarch.oci.tar
 #   PUSH=1      —— 同一份合并 manifest 推到 Docker Hub（techfunways/contract 的
-#                 :<VERSION> 与 :latest），需先 docker login 且账号能写该命名空间
+#                 :v<版本> 与 :latest），需先 docker login 且账号能写该命名空间
 #   SKIP_OCI=1  —— 跳过本地归档（只推送时用，不重打已随发行目录分发的归档）
 # 也支持 --push 作为 PUSH=1 的等价参数。两个开关都不开时与历史行为完全一致：
 # 只导出本地归档，不碰任何远端（未经用户确认不推送）。
@@ -20,6 +20,14 @@ done
 
 IMAGE="techfunways/contract"
 VERSION="$(cat VERSION | tr -d '\n')"
+# VERSION 文件本身带 v 前缀（如 v0.2.1），而镜像版本 tag 的口径是 v<版本>；
+# 这里归一成恰好一个 v。2026-10-11 发版实测：直接写 v${VERSION} 会打出
+# techfunways/contract:vv0.2.1，多了一层 v。
+VERSION_TAG="${VERSION}"
+case "${VERSION_TAG}" in
+  v*) ;;
+  *) VERSION_TAG="v${VERSION_TAG}" ;;
+esac
 BUILD_TIME="$(date +%Y-%m-%dT%H:%M:%S)"
 GIT_COMMIT="$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")"
 OUTPUT_DIR="release/${VERSION}"
@@ -50,7 +58,7 @@ done
 # 用默认 builder（daemon 内置 buildkit）直接导出 OCI 归档：
 # 一个归档同时携带两种架构的合并 manifest。
 if [ "${SKIP_OCI}" != "1" ]; then
-  echo "Building ${IMAGE}:${VERSION} for linux/amd64,linux/arm64..."
+  echo "Building ${IMAGE}:${VERSION_TAG} for linux/amd64,linux/arm64..."
   echo "Writing local OCI image archive (no registry push): ${OUTPUT_FILE}"
   docker buildx build \
     --builder default \
@@ -58,7 +66,7 @@ if [ "${SKIP_OCI}" != "1" ]; then
     --build-arg "VERSION=${VERSION}" \
     --build-arg "BUILD_TIME=${BUILD_TIME}" \
     --build-arg "GIT_COMMIT=${GIT_COMMIT}" \
-    -t "${IMAGE}:${VERSION}" \
+    -t "${IMAGE}:${VERSION_TAG}" \
     -t "${IMAGE}:latest" \
     --output "type=oci,dest=${OUTPUT_FILE}" \
     .
@@ -68,16 +76,16 @@ fi
 
 # PUSH=1：把同一份 amd64+arm64 合并 manifest 推到 Docker Hub
 if [ "${PUSH}" = "1" ]; then
-  echo "Pushing ${IMAGE}:${VERSION} and ${IMAGE}:latest (linux/amd64 + linux/arm64)..."
+  echo "Pushing ${IMAGE}:${VERSION_TAG} and ${IMAGE}:latest (linux/amd64 + linux/arm64)..."
   docker buildx build \
     --builder default \
     --platform linux/amd64,linux/arm64 \
     --build-arg "VERSION=${VERSION}" \
     --build-arg "BUILD_TIME=${BUILD_TIME}" \
     --build-arg "GIT_COMMIT=${GIT_COMMIT}" \
-    -t "${IMAGE}:${VERSION}" \
+    -t "${IMAGE}:${VERSION_TAG}" \
     -t "${IMAGE}:latest" \
     --push \
     .
-  echo "Pushed to Docker Hub: ${IMAGE}:${VERSION} / ${IMAGE}:latest"
+  echo "Pushed to Docker Hub: ${IMAGE}:${VERSION_TAG} / ${IMAGE}:latest"
 fi
