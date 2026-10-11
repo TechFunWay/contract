@@ -11,6 +11,7 @@ import {
   type ContractStatus,
   type ContractSummary,
 } from '../api/contract'
+import { appHref } from '../utils/app-url'
 
 const router = useRouter()
 
@@ -105,7 +106,9 @@ function removeContract() {
 }
 
 function printContract(contract: ContractSummary) {
-  window.open(`/print/contract/${contract.id}`, '_blank')
+  // 打印页开新窗口必须带网关前缀（appHref），根绝对路径会逃出
+  // /app/techfunway-contract 落到网关根上，被兜底转去飞牛相册。
+  window.open(appHref(`/print/contract/${contract.id}`), '_blank')
 }
 
 onMounted(load)

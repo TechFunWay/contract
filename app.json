@@ -1,7 +1,7 @@
 {
   "appname": "techfunway-contract",
   "display_name": "合同管家",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "desc": "合同管家 — 自定义模板生成合同，支持导出打印 PDF",
   "author": "TechFunWay",
   "website": "https://techfunway.wycto.cn",

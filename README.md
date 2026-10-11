@@ -4,6 +4,18 @@
 
 基于 [smallgo](https://gitee.com/TechFunWay/smallgo) 应用框架实例化（Go/Gin/GORM/SQLite + Vue 3/TS/Vite/Pinia/Tailwind），与家族应用（bill、reminders、rental、worklog）同构，默认端口 **8911**。
 
+## 下载与安装
+
+| 渠道 | 获取方式 |
+|---|---|
+| GitHub Releases | <https://github.com/TechFunWay/contract/releases> —— 各平台压缩包、飞牛 `fpk` 安装包与 `docker-compose.yml` |
+| Gitee 发行版 | <https://gitee.com/TechFunWay/contract/releases> —— 国内镜像，产物与 GitHub 一致 |
+| Docker 镜像 | `docker pull techfunways/contract:latest`（amd64 / arm64 多平台） |
+| 飞牛 fnOS | 在飞牛应用中心手动安装 Releases 里的 `.fpk` 安装包（amd64 / arm64） |
+| 官网介绍页 | <https://techfunway.wycto.cn/fnapp/contract> |
+
+> 默认端口 `8911`；数据默认是挂载目录下的 SQLite 单文件，备份即拷贝，恢复支持上传本地备份文件。
+
 ## 界面预览
 
 > 以下截图为 v0.2.0 实拍，数据为演示用示例数据。
