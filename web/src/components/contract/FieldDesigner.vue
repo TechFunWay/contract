@@ -48,13 +48,10 @@
         </select>
       </div>
 
-      <div v-if="field.type === 'select'" class="space-y-1">
-        <input
-          :value="(field.options || []).join('、')"
-          class="input-field !px-2.5 !py-1.5 text-sm"
-          placeholder="下拉选项，用顿号或逗号分隔"
-          @input="update(index, { options: splitOptions(($event.target as HTMLInputElement).value) })"
-        />
+      <div v-if="field.type === 'select'">
+        <!-- 选项输入走独立组件：它自己维护输入中的原始文本，不再用 join 后的
+             值回填输入框（旧行为会把刚敲的逗号/空格吃掉，粉丝反馈的根因）。 -->
+        <FieldOptionsInput :options="field.options" @update:options="update(index, { options: $event })" />
       </div>
       <div v-else>
         <input
@@ -80,6 +77,7 @@
 
 <script setup lang="ts">
 import { FIELD_TYPE_LABELS, type FieldType, type TemplateField } from '../../api/contract'
+import FieldOptionsInput from './FieldOptionsInput.vue'
 
 const props = defineProps<{ fields: TemplateField[] }>()
 
@@ -119,13 +117,6 @@ function move(index: number, delta: number) {
   const fields = [...props.fields]
   ;[fields[index], fields[target]] = [fields[target], fields[index]]
   emit('update:fields', fields)
-}
-
-function splitOptions(raw: string): string[] {
-  return raw
-    .split(/[、,，]/)
-    .map((s) => s.trim())
-    .filter(Boolean)
 }
 </script>
 

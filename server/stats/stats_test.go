@@ -177,10 +177,13 @@ func TestDonateSupport(t *testing.T) {
 		}
 	})
 
-	t.Run("upstream 5xx fails", func(t *testing.T) {
+	t.Run("upstream 5xx fails after retries", func(t *testing.T) {
 		db := setupDB(t)
+		var calls atomic.Int32
 		fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			calls.Add(1)
 			w.WriteHeader(http.StatusInternalServerError)
+			_, _ = w.Write([]byte(`{"code":500,"msg":"数据库连接失败，请检查数据库配置"}`))
 		}))
 		defer fake.Close()
 		t.Setenv("STATS_ENDPOINT", fake.URL)
@@ -192,6 +195,66 @@ func TestDonateSupport(t *testing.T) {
 		r.ServeHTTP(resp, httptest.NewRequest(http.MethodPost, "/api/donate/support", nil))
 		if resp.Code != http.StatusInternalServerError {
 			t.Fatalf("status = %d, want 500 on upstream failure", resp.Code)
+		}
+		if calls.Load() != reportAttempts {
+			t.Fatalf("upstream calls = %d, want %d (5xx must be retried)", calls.Load(), reportAttempts)
+		}
+		// 服务端原因要透给前端，便于判断是统计服务的问题
+		if !strings.Contains(resp.Body.String(), "数据库连接失败") {
+			t.Fatalf("body = %s, want upstream reason", resp.Body.String())
+		}
+	})
+
+	t.Run("transient 5xx then success is retried", func(t *testing.T) {
+		db := setupDB(t)
+		var calls atomic.Int32
+		fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			if calls.Add(1) == 1 {
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		}))
+		defer fake.Close()
+		t.Setenv("STATS_ENDPOINT", fake.URL)
+
+		Init("testapp", "v1.0.0", "", t.TempDir())
+		r := newRouter(t, db)
+
+		resp := httptest.NewRecorder()
+		r.ServeHTTP(resp, httptest.NewRequest(http.MethodPost, "/api/donate/support", nil))
+		if resp.Code != http.StatusOK {
+			t.Fatalf("status = %d, body = %s", resp.Code, resp.Body.String())
+		}
+		if calls.Load() != 2 {
+			t.Fatalf("upstream calls = %d, want 2 (one retry)", calls.Load())
+		}
+	})
+
+	t.Run("upstream 4xx is not retried", func(t *testing.T) {
+		db := setupDB(t)
+		var calls atomic.Int32
+		fake := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			calls.Add(1)
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte(`{"code":400,"msg":"事件类型不合法"}`))
+		}))
+		defer fake.Close()
+		t.Setenv("STATS_ENDPOINT", fake.URL)
+
+		Init("testapp", "v1.0.0", "", t.TempDir())
+		r := newRouter(t, db)
+
+		resp := httptest.NewRecorder()
+		r.ServeHTTP(resp, httptest.NewRequest(http.MethodPost, "/api/donate/support", nil))
+		if resp.Code != http.StatusInternalServerError {
+			t.Fatalf("status = %d, want 500", resp.Code)
+		}
+		if calls.Load() != 1 {
+			t.Fatalf("upstream calls = %d, want 1 (4xx must not be retried)", calls.Load())
+		}
+		if !strings.Contains(resp.Body.String(), "事件类型不合法") {
+			t.Fatalf("body = %s, want upstream reason", resp.Body.String())
 		}
 	})
 

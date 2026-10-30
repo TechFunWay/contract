@@ -50,6 +50,8 @@ VITE_FNOS_APP=true VITE_BASE_PATH="/app/${FNOS_PKG_NAME}/" npm --prefix web run 
 
 echo "Copying frontend..."
 rm -rf server/static/dist
+# 同 build-all.sh：server/static 在全新检出上并不存在（不入库），先建目录再拷。
+mkdir -p server/static
 cp -r web/dist server/static/dist
 
 BUILD_DIR="release/${VERSION}"

@@ -170,8 +170,15 @@ export const useSupportStore = defineStore('support', () => {
     try {
       const res = await donateSupport(amount)
       ok = res.status === 200 && res.data?.code === 0 && res.data?.data?.ok === true
-    } catch {
+    } catch (e) {
       ok = false
+      // 服务端把统计服务的真实原因放在 message 里（服务端已退避重试过，仍失败
+      // 才回非 2xx）。透出来，用户和作者都能一眼看出是统计服务的问题——例如
+      // 门户站数据库异常返回 500——而不是「我的操作有问题」。
+      const msg = (e as { response?: { data?: { message?: string } } })?.response?.data?.message
+      if (msg) {
+        errorText.value = `发送失败：${msg.slice(0, 60)}（不影响你的支持 ❤）`
+      }
     }
     sending.value = false
     if (ok) {
@@ -180,7 +187,7 @@ export const useSupportStore = defineStore('support', () => {
       refreshSupported()
       show.value = false
       bannerVisible.value = false
-    } else {
+    } else if (!errorText.value) {
       errorText.value = '发送失败，请稍后重试（不影响你的支持 ❤）'
     }
     return ok

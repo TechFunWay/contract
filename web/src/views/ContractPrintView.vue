@@ -26,8 +26,24 @@ onMounted(async () => {
   }
 })
 
+// 部分内置浏览器（飞牛 App WebView、iOS WKWebView、Android WebView）根本没实现
+// window.print，点了「打印 / 导出 PDF」会静默什么都不做——2026-10-30 粉丝反馈
+// 「合同管家没法打印」就是这一类。这里先探测，不支持时给出可操作的提示，
+// 别让用户以为按钮坏了。
+const canPrint = typeof window.print === 'function'
+const notice = ref('')
+
 function print() {
-  window.print()
+  if (!canPrint) {
+    notice.value =
+      '当前浏览器不支持直接调起打印：可用浏览器自带菜单里的「打印 / 分享 → 打印」生成 PDF，或复制本页链接到电脑浏览器打开后再打印。'
+    return
+  }
+  try {
+    window.print()
+  } catch {
+    notice.value = '调起打印失败，请改用浏览器菜单里的「打印」，或复制本页链接到电脑浏览器打开。'
+  }
 }
 
 // 返回应用：打印页通常从新标签打开，能关就关。
@@ -46,6 +62,16 @@ function goBack() {
       <button class="btn-ghost !px-3 !py-1.5 text-sm" @click="goBack">返回</button>
       <span class="text-sm text-muted-foreground truncate flex-1 text-center">{{ contract?.title }}</span>
       <button class="btn-brand !px-4 !py-1.5 text-sm" @click="print">打印 / 导出 PDF</button>
+    </div>
+
+    <div
+      v-if="!canPrint || notice"
+      class="no-print bg-amber-500/10 border-b border-amber-500/30 px-4 py-2 text-xs leading-relaxed text-amber-700 dark:text-amber-300"
+    >
+      {{
+        notice ||
+        '当前内置浏览器不支持直接调起打印：可用浏览器自带菜单里的「打印 / 分享 → 打印」生成 PDF，或复制本页链接到电脑浏览器打开后再打印。'
+      }}
     </div>
 
     <div v-if="loading" class="py-20 text-center text-sm text-muted-foreground">加载中…</div>

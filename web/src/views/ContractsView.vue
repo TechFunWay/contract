@@ -11,7 +11,7 @@ import {
   type ContractStatus,
   type ContractSummary,
 } from '../api/contract'
-import { appHref } from '../utils/app-url'
+import { openAppPage } from '../utils/app-url'
 
 const router = useRouter()
 
@@ -106,9 +106,13 @@ function removeContract() {
 }
 
 function printContract(contract: ContractSummary) {
-  // 打印页开新窗口必须带网关前缀（appHref），根绝对路径会逃出
+  // 打印页开新窗口必须带网关前缀（openAppPage/appHref），根绝对路径会逃出
   // /app/techfunway-contract 落到网关根上，被兜底转去飞牛相册。
-  window.open(appHref(`/print/contract/${contract.id}`), '_blank')
+  // 新窗口被内置浏览器/WebView 拦下时退回同标签打开（打印页自带「返回」），
+  // 保证点了打印总能到得了打印页（2026-10-30 粉丝反馈「没法打印」）。
+  if (!openAppPage(`/print/contract/${contract.id}`)) {
+    router.push(`/print/contract/${contract.id}`)
+  }
 }
 
 onMounted(load)

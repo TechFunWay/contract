@@ -23,6 +23,9 @@ cd web && npm ci && npm run build && cd ..
 
 echo "Copying frontend..."
 rm -rf server/static/dist
+# server/static 在全新检出上并不存在（整体不入库，只有构建会生成它），不先建
+# 目录 cp 会把整个发行链打断：目标父目录不存在时报「No such file directory」。
+mkdir -p server/static
 cp -r web/dist server/static/dist
 
 BUILD_DIR="release/${VERSION}"

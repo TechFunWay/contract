@@ -17,7 +17,7 @@ import {
   type TemplateSummary,
 } from '../api/contract'
 import { amountToCnyUppercase } from '../utils/cny-money'
-import { appHref } from '../utils/app-url'
+import { openAppPage } from '../utils/app-url'
 
 const route = useRoute()
 const router = useRouter()
@@ -217,9 +217,12 @@ watch(values, () => {
 
 function print() {
   if (contract.value) {
-    // 打印页开新窗口必须带网关前缀（appHref），根绝对路径会逃出
+    // 打印页开新窗口必须带网关前缀（openAppPage/appHref），根绝对路径会逃出
     // /app/techfunway-contract 落到网关根上，被兜底转去飞牛相册。
-    window.open(appHref(`/print/contract/${contract.value.id}`), '_blank')
+    // 新窗口被内置浏览器/WebView 拦下时退回同标签打开（打印页自带「返回」）。
+    if (!openAppPage(`/print/contract/${contract.value.id}`)) {
+      router.push(`/print/contract/${contract.value.id}`)
+    }
   }
 }
 

@@ -15,3 +15,16 @@ export function appHref(path: string): string {
   const rel = path.replace(/^\/+/, '')
   return `${base}${rel}`
 }
+
+// 「应用内页面开新窗口」的统一入口：负责拼地址（appHref）并如实回报成败。
+// 内置浏览器 / WebView 常把 window.open 弹窗拦下（返回 null 或直接抛错），
+// 旧写法 window.open(...) 一扔就不管了，现场表现是「点打印没反应」
+// （2026-10-30 粉丝反馈「合同管家没法打印」）。调用方拿到 false 时应退回
+// 同标签跳转（打印页自带「返回」），保证用户总能到得了目标页面。
+export function openAppPage(path: string): boolean {
+  try {
+    return !!window.open(appHref(path), '_blank')
+  } catch {
+    return false
+  }
+}
